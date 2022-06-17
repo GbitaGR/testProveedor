@@ -78,9 +78,9 @@
 </body>
  <!-- Scripts -->
  {{-- <script src="{{ asset('js/toastr.min.js') }}" ></script> --}}
- <script src="{{ asset('js/jquery-3.2.1.slim.min.js') }}" ></script>
- <script src="{{ asset('js/popper.min.js') }}" ></script>
- <script src="{{ asset('js/bootstrap.min.js') }}" ></script>
+ {{-- <script src="{{ asset('js/jquery-3.2.1.slim.min.js') }}" ></script>
+ <script src="{{ asset('js/popper.min.js') }}" ></script>--}}
+ <script src="{{ asset('js/bootstrap.min.js') }}" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script> 
  <script src="{{asset('js/app.js')}}"></script>
  <script src="{{asset('js/fontawesome.js')}}"></script>
 </html>
