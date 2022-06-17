@@ -127,6 +127,7 @@
             },
             addProveedor(id){
                 let me=this
+                me.pages = []
                 let url = 'store-proveedor'
                 // let data = {
                 //     nombre : value[0],
@@ -145,7 +146,7 @@
                     /* Read more about isConfirmed, isDenied below */
                     if (result.isConfirmed) {
                         axios.post(url,{idProv:id}).then(response=>{
-                            me.getListado()
+                            me.filtrando()
                             
                             me.$toastr.Add({
                                     name: "aceptProv",
@@ -194,6 +195,7 @@
             },
             deleteProveedor(id){
                 let me=this
+                me.pages = []
                 let url = 'delete-proveedor'   
                 // let data = {
                 //     nombre : value[0],
@@ -212,7 +214,7 @@
                     /* Read more about isConfirmed, isDenied below */
                     if (result.isConfirmed) {
                         axios.post(url,{idProv:id}).then(response=>{
-                            me.getListado()
+                            me.filtrando()
                             this.$toastr.Add({
                                     name: "aceptProv",
                                     title: "Proveedor rechazado",

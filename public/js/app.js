@@ -2069,6 +2069,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     addProveedor: function addProveedor(id) {
       var me = this;
+      me.pages = [];
       var url = 'store-proveedor'; // let data = {
       //     nombre : value[0],
       //     rfc    : value[1],
@@ -2136,6 +2137,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       var me = this;
+      me.pages = [];
       var url = 'delete-proveedor'; // let data = {
       //     nombre : value[0],
       //     rfc    : value[1],
@@ -56087,8 +56089,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\laragon\www\testProveedor\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\laragon\www\testProveedor\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\laragon\www\testProveedor2\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\laragon\www\testProveedor2\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
