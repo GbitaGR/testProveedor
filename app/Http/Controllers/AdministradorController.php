@@ -125,11 +125,12 @@ class AdministradorController extends Controller
 
             //Creando usuario para proveedor
             if($proveedor){
+                $pass = 'prueba';
                 $user   = new User();
                 $user->id_proveedor =   $proveedor->id;
                 $user->name         =   $proveedor->nombre;
                 $user->email        =   $proveedor->email;
-                $user->password     =    bcrypt((strtolower(str_replace(' ','',$proveedor->nombre))));
+                $user->password     =    bcrypt($pass);
                 
 
                 if($user->save()){
