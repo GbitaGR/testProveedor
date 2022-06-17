@@ -32,7 +32,7 @@ Seguir los siguientes pasos para la puesta en marcha:
 Para realizar pruebas dentro de la aplicación:
 ```
 1. Para administrador con las siguientes credenciales: admin@correo.com/temporal2022
-2. Cargar archivo csv ubicado en public/file/ dentron del proyecto.
+2. Cargar archivo csv ubicado en public/file/ dentro del proyecto.
 3. Password para proveedor: prueba.
 ```
 
