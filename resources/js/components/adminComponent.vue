@@ -1,11 +1,5 @@
 <template>
-    <div class="card">
-        <div class="card-header">
-            <h1>Listado de Proveedores</h1>
-        </div>
-        <div class="card-body">
-            <div class="col-md-12 p-0">
-                <div class="table-responsive">
+    <div class="table-responsive">
                     <table class="table table-hover text-center">
                         <thead class="thead-light">
                         <tr>
@@ -26,24 +20,22 @@
                                 <td  v-text="proveedor[0]"></td>
                                 <td  v-text="proveedor[1]"></td>
                                 <td  v-text="proveedor[2]"></td>
-                                <td  v-if="proveedor[3] == 1">Sin registro</td>
-                                <td  v-else-if="proveedor[3] == 2" >Registrado</td>
-                                <td  v-else >Rechazado</td>
+                                <td  v-if="proveedor[3] == 1"><span>Sin registro</span></td>
+                                <td  v-else-if="proveedor[3] == 2" ><span class="alert alert-success">Registrado</span></td>
+                                <td  v-else ><span class="alert alert-danger">Rechazado</span></td>
                                 <td>
-                                    <button v-if="proveedor" type="button" class="btn btn-outline-dark p-1" data-toggle="tooltip" data-placement="top" title="Registrar" @click="addProveedor(proveedor)"><i class="fas fa-edit fa-lg pt-1" ></i></button>
-                                    <button v-if="proveedor" type="button" class="btn btn-outline-danger p-1" data-toggle="tooltip" data-placement="top" title="Eliminar" @click="deleteProveedor(vehiculo.id)"><i class="fas fa-trash-alt fa-lg pt-1" ></i></button>
+                                    <button :disabled="proveedor[3] != 1" type="button" class="btn btn-outline-dark p-1" data-toggle="tooltip" data-placement="top" title="Registrar" @click="addProveedor(proveedor)"><i class="fas fa-edit fa-lg pt-1" ></i></button>
+                                    <button :disabled="proveedor[3] != 1" type="button" class="btn btn-outline-danger p-1" data-toggle="tooltip" data-placement="top" title="Eliminar" @click="deleteProveedor(proveedor)"><i class="fas fa-trash-alt fa-lg pt-1" ></i></button>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </div>
-    </div>
 </template>
 
 <script>
-    // import swal from 'sweetalert2';
+    import Swal from 'sweetalert2';
+    import 'animate.css';
     export default {
         data(){
             return {     
@@ -54,7 +46,13 @@
         mounted() {
             console.log('Component mounted.')
             this.getListado()
-        },
+            // Swal.fire({
+            // title: 'Error!',
+            // text: 'Do you want to continue',
+            // icon: 'error',
+            // confirmButtonText: 'Cool'
+            // })
+            },
         methods:{
             getListado(){
                 let me =this;
@@ -66,6 +64,121 @@
                     console.log(me.arrayListado);
                 }).catch(function (error) {
                 });
+            },
+            addProveedor(value){
+                let me=this
+                let url = 'store-proveedor'
+                let data = {
+                    nombre : value[0],
+                    rfc    : value[1],
+                    email  : value[2],
+                    estatus : value[3]
+                }
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Se dará acceso a este proveedor. Continuar?',
+                    showDenyButton: true,
+                    // showCancelButton: true,
+                    confirmButtonText: 'Guardar',
+                    denyButtonText: 'Cancelar',
+                    }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+                        axios.post(url,data).then(response=>{
+                            me.getListado()
+                            Swal.fire({
+                                type:'success',
+                                title: 'Guardado',
+                                showClass: {
+                                    popup: 'animate__animated animate__fadeInDown'
+                                },
+                                hideClass: {
+                                    popup: 'animate__animated animate__fadeOutUp'
+                                }
+                            })
+                         }).catch(error =>{
+                             console.log(error);
+                            Swal.fire({
+                                title: 'Un error ha ocurrido',
+                                text: 'No se pudo guardar el registro',
+                                type: 'error',
+                                confirmButtonText: 'Aceptar'
+                            });
+                            me.getListado()
+                        });
+
+                        
+                    } else if (result.isDenied) {
+                          Swal.fire({
+                                type:'info',
+                                title: 'Cancelado',
+                                showClass: {
+                                    popup: 'animate__animated animate__fadeInDown'
+                                },
+                                hideClass: {
+                                    popup: 'animate__animated animate__fadeOutUp'
+                                }
+                            })
+                    }
+                    })
+
+            },
+            deleteProveedor(value){
+                let me=this
+                let url = 'delete-proveedor'   
+                let data = {
+                    nombre : value[0],
+                    rfc    : value[1],
+                    email  : value[2],
+                    estatus : value[3]
+                }
+                 Swal.fire({
+                    icon: 'warning',
+                    title: 'Se rechazará el acceso al proveedor. Continuar?',
+                    showDenyButton: true,
+                    // showCancelButton: true,
+                    confirmButtonText: 'Continuar',
+                    denyButtonText: 'Cancelar',
+                    }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+                        axios.post(url,data).then(response=>{
+                            me.getListado()
+                            Swal.fire({
+                                type:'success',
+                                title: 'Rechazado',
+                                showClass: {
+                                    popup: 'animate__animated animate__fadeInDown'
+                                },
+                                hideClass: {
+                                    popup: 'animate__animated animate__fadeOutUp'
+                                }
+                            })
+                         }).catch(error =>{
+                             console.log(error);
+                            Swal.fire({
+                                title: 'Un error ha ocurrido',
+                                text: 'No se pudo guardar el registro',
+                                type: 'error',
+                                confirmButtonText: 'Aceptar'
+                            });
+                            me.getListado()
+                        });
+
+                        
+                    } else if (result.isDenied) {
+                          Swal.fire({
+                                type:'info',
+                                title: 'Cancelado',
+                                showClass: {
+                                    popup: 'animate__animated animate__fadeInDown'
+                                },
+                                hideClass: {
+                                    popup: 'animate__animated animate__fadeOutUp'
+                                }
+                            })
+                    }
+                    })
             }
         }
     }

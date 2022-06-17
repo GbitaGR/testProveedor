@@ -21,6 +21,7 @@ window.Vue = require('vue');
 
 // Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('admin-component', require('./components/adminComponent.vue').default);
+Vue.component('proveedor-component', require('./components/proveedorComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -29,5 +30,5 @@ Vue.component('admin-component', require('./components/adminComponent.vue').defa
  */
 
 const app = new Vue({
-    el: '#admin',
+    el: '#app',
 });
