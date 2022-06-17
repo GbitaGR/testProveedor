@@ -2189,6 +2189,23 @@ __webpack_require__.r(__webpack_exports__);
               'Content-Type': 'multipart/form-data'
             }
           }).then(function (response) {
+            console.log(response);
+
+            if (response.data.totalNuevos > 0) {
+              me.$toastr.Add({
+                name: "aceptProv",
+                title: "Nuevo registro",
+                msg: "Se registraron " + response.data.totalNuevos + " proveedores",
+                position: "toast-top-right",
+                type: "info",
+                timeout: 5000,
+                style: {
+                  size: '2rem'
+                },
+                progressbar: true
+              });
+            }
+
             me.files = '';
             me.getListado();
           })["catch"](function (error) {

@@ -23,7 +23,7 @@ class AdministradorController extends Controller
         $proveedores = array();
         $proveedorData = array();
         // $contador = 1;
-        // $totalNuevos = 0;
+        $totalNuevos = 0;
 
         if (($open = fopen($file->getPathName()/*storage_path() . "/proveedores1.csv"*/, "r")) !== FALSE) {
             // dd("si lo abre");
@@ -32,7 +32,7 @@ class AdministradorController extends Controller
                 if($data[0]!='nombre' && $data[1]!='rfc' && $data[2]!='email'){
                     $proveedor = Proveedor::where('rfc',$data[1])->first();
                     if(!$proveedor){
-                        // $totalNuevos +=1;
+                        
                           //Creando proveedor
                         $provNew = new Proveedor();
                         $provNew->nombre  =   $data['0'];
@@ -51,7 +51,7 @@ class AdministradorController extends Controller
                         //     'registro'    =>   1       
                         // );
 
-
+                        $totalNuevos +=1;
                     }
                     // else{
 
@@ -78,7 +78,7 @@ class AdministradorController extends Controller
             }
 
             fclose($open);
-            return response()->json(['message' => 'Cargado'],200);
+            return response()->json(['message' => 'Cargado','totalNuevos'=>$totalNuevos],200);
         } else{
             return response()->json(['message' => 'Hubo un error al cargar el archivo'],400);
         // return response()->json(['proveedores'=>$proveedores,'totalNuevos'=>$totalNuevos],200);
