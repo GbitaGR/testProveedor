@@ -1,0 +1,16 @@
+nombre	rfc	email
+Proveedor 1	XAXX010101000	proveedor1@correo.com
+Proveedor 2	XAXX010101001	proveedor2@correo.com
+Proveedor 3	XAXX010101002	proveedor3@correo.com
+Proveedor 4	XAXX010101003	proveedor4@correo.com
+Proveedor 5	XAXX010101004	proveedor5@correo.com
+Proveedor 6	XAXX010101005	proveedor6@correo.com
+Proveedor 7	XAXX010101006	proveedor7@correo.com
+Proveedor 8	XAXX010101007	proveedor8@correo.com
+Proveedor 9	XAXX010101008	proveedor9@correo.com
+Proveedor 10	XAXX010101009	proveedor10@correo.com
+Proveedor 11	XAXX010101010	proveedor11@correo.com
+Proveedor 12	XAXX010101011	proveedor12@correo.com
+Proveedor 13	XAXX010101012	proveedor13@correo.com
+Proveedor 14	XAXX010101013	proveedor13@correo.com
+Proveedor 15	XAXX010101014	proveedor14@correo.com

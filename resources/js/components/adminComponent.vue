@@ -1,4 +1,10 @@
 <template>
+<div>
+     <div class="mb-3">
+        <label class="form-label">Archivo csv</label>
+        <input type="file" id="file" ref="myFiles" class="form-control"
+        @change="previewFiles" accept="csv">
+    </div>
     <div class="table-responsive">
                     <table class="table table-hover text-center">
                         <thead class="thead-light">
@@ -31,16 +37,20 @@
                         </tbody>
                     </table>
                 </div>
+</div>
+    
 </template>
 
 <script>
     import Swal from 'sweetalert2';
     import 'animate.css';
+    import VueToastr from "vue-toastr";
     export default {
         data(){
             return {     
                 arrayListado : [],
                 contador:0,
+                files: [],
             }
         },
         mounted() {
@@ -86,6 +96,16 @@
                     if (result.isConfirmed) {
                         axios.post(url,data).then(response=>{
                             me.getListado()
+                            
+                            this.$toastr.Add({
+                                    name: "aceptProv",
+                                    title: "Proveedor acepetado",
+                                    msg: "El proveedor "+value[0]+ " fué aceptado",
+                                    position: "toast-top-right",
+                                    type: "success",
+                                    timeout: 5000,
+                                    progressbar: true,
+                            });
                             Swal.fire({
                                 type:'success',
                                 title: 'Guardado',
@@ -144,6 +164,16 @@
                     if (result.isConfirmed) {
                         axios.post(url,data).then(response=>{
                             me.getListado()
+                            this.$toastr.Add({
+                                    name: "aceptProv",
+                                    title: "Proveedor rechazado",
+                                    msg: "El proveedor "+value[0]+ " fué rechazado",
+                                    position: "toast-top-right",
+                                    type: "info",
+                                    timeout: 5000,
+                                    style:{size:'2rem'},
+                                    progressbar: true,
+                            });
                             Swal.fire({
                                 type:'success',
                                 title: 'Rechazado',
@@ -179,6 +209,10 @@
                             })
                     }
                     })
+            },
+            previewFiles() {
+                this.files = this.$refs.myFiles.files
+                console.log( this.files);
             }
         }
     }
