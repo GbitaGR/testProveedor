@@ -30,7 +30,7 @@
                     <tr v-if="!arrayListado.length">
                         <td colspan="6">No hay proveedores que mostrar</td>
                     </tr>
-                    <tr v-for="proveedor in arrayListado" :key="proveedor.id">
+                    <tr v-for="proveedor in displayedPosts" :key="proveedor.id">
                         <td v-text="proveedor.consecutivo"></td>
                         <td  v-text="proveedor.nombre"></td>
                         <td  v-text="proveedor.rfc"></td>
@@ -46,6 +46,35 @@
                 </tbody>
             </table>
         </div>
+              <div class="">
+                        <nav class="">
+                            <ul class="">
+                                <li class="">
+                                    <button type="button" class="page-link" v-if="page != 1" @click="page--, seleccionado = page">Anterior
+                                    </button>
+                                </li>
+                                <li class="">
+                                    <button type="button" class="page-link" :class="{boton_seleccionado:seleccionado == pageNumber}" :ref="{seleccionado}" v-for="pageNumber in pages.slice(page-1, page+5)" @click="cambiarPag(pageNumber)">{{pageNumber}}
+                                    </button>
+                                </li>
+                                <li class=""><button type="button" @click="page++, seleccionado = page" v-if="page < pages.length" class="page-link"> Siguiente </button></li>
+                            </ul>
+
+
+
+                            <!-- <ul class="pagination">
+                                <li class="page-item">dsfdfds
+                                    <button type="button" class="page-link" v-if="page != 1" @click="page--"> Previous </button>
+                                </li>
+                                <li class="page-item">sfsdf
+                                    <button type="button" class="page-link" v-for="pageNumber in pages.slice(page-1, page+5)" @click="page = pageNumber" :key="pageNumber"> {{pageNumber}} </button>
+                                </li>
+                                <li class="page-item">sdsdf
+                                    <button type="button" @click="page++" v-if="page < pages.length" class="page-link"> Next </button>
+                                </li>
+                            </ul> -->
+                        </nav>
+                    </div>
     </div>
 </div>
     
@@ -61,32 +90,42 @@
                 arrayListado : [],
                 contador:0,
                 files: '',
+                page: 1,
+                perPage: 10,
+                pages: [],
+                seleccionado: 1
             }
         },
+         computed: {
+            displayedPosts () {
+                return this.paginate(this.arrayListado);
+            }
+
+	    },
+          watch: {
+            arrayListado () {
+                this.page = 1
+                this.setPages();
+            }
+	    },
         mounted() {
-            console.log('Component mounted.')
+            this.pages = []
             this.getListado()
-            
-            // Swal.fire({
-            // title: 'Error!',
-            // text: 'Do you want to continue',
-            // icon: 'error',
-            // confirmButtonText: 'Cool'
-            // })
             },
         methods:{
+             filtrando(){
+                this.pages = []
+                this.getListado()
+            },
             getListado(){
                 let me =this;
                 let url ='getListado';
                 axios.get(url).then(function (response) {
                     me.arrayListado = response.data.proveedores;
-                    console.log(response);
-                    console.log(me.arrayListado);
                 }).catch(function (error) {
                 });
             },
             addProveedor(id){
-                console.log("para guardar",id);
                 let me=this
                 let url = 'store-proveedor'
                 // let data = {
@@ -128,7 +167,6 @@
                                 }
                             })
                          }).catch(error =>{
-                             console.log(error);
                             Swal.fire({
                                 title: 'Un error ha ocurrido',
                                 text: 'No se pudo guardar el registro',
@@ -155,7 +193,6 @@
 
             },
             deleteProveedor(id){
-                console.log("Que hace?",id);
                 let me=this
                 let url = 'delete-proveedor'   
                 // let data = {
@@ -197,7 +234,6 @@
                                 }
                             })
                          }).catch(error =>{
-                             console.log(error);
                             Swal.fire({
                                 title: 'Un error ha ocurrido',
                                 text: 'No se pudo guardar el registro',
@@ -224,11 +260,11 @@
             },
             previewFiles() {
                 let me = this
+                me.pages = []
                 me.files = this.$refs.myFiles.files[0]
                 let formData = new FormData();
                 let url ='cargarFile';
                 formData.append('file', me.files);
-                console.log("serializar form",formData);
 
                  Swal.fire({
                     icon: 'warning',
@@ -247,7 +283,6 @@
                             }
                         }
                         ).then(function (response) {
-                            console.log(response);
                             if(response.data.totalNuevos > 0){
                                 me.$toastr.Add({
                                        name: "aceptProv",
@@ -263,7 +298,7 @@
                             me.files = ''
                             me.getListado()
                         }).catch(function (error) {
-                            console.log(error);
+                            
                         });
                     } else if (result.isDenied) {
                         me.files = ''
@@ -284,7 +319,62 @@
                 // this.files = this.$refs.myFiles.files
                 // console.log(this.files);
                 // this.getListado(this.files[0])
-            }
+            },
+            setPages () {
+                let numberOfPages = Math.ceil(this.arrayListado.length / this.perPage);
+                for (let index = 1; index <= numberOfPages; index++) {
+                    this.pages.push(index);
+                }
+            },
+            paginate (proveedores) {
+                let page = this.page;
+                let perPage = this.perPage;
+                let from = (page * perPage) - perPage;
+                let to = (page * perPage);
+                return  proveedores.slice(from, to);
+            },
+            cambiarPag(pageNumber){
+              this.page = pageNumber
+              this.seleccionado = pageNumber
+              document.activeElement.blur();
+            },
         }
     }
 </script>
+<style>
+.swal-text {
+  background-color: #FEFAE3;
+  padding: 17px;
+  border: 1px solid #F0E1A1;
+  display: block;
+  margin: 22px;
+  text-align: justify !important;
+  color: #61534e;
+}
+button.page-link {
+	display: inline-block;
+}
+button.page-link {
+    font-size: 20px;
+    color: #F5826C;
+    font-weight: 500;
+}
+.offset{
+  width: 95% !important;
+  margin: 20px auto;
+}
+
+nav > ul {
+  display: flex;
+  justify-content: center;
+}
+li {
+  margin: 0 .75rem;
+  list-style:none;
+}
+
+.boton_seleccionado{
+  background:#F5826C;
+  color: #fff !important;
+}
+</style>
