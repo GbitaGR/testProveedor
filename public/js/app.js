@@ -1986,6 +1986,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -1994,7 +2004,7 @@ __webpack_require__.r(__webpack_exports__);
     return {
       arrayListado: [],
       contador: 0,
-      files: []
+      files: ''
     };
   },
   mounted: function mounted() {
@@ -2010,24 +2020,22 @@ __webpack_require__.r(__webpack_exports__);
     getListado: function getListado() {
       var me = this;
       var url = 'getListado';
-      console.log(url);
       axios.get(url).then(function (response) {
         me.arrayListado = response.data.proveedores;
         console.log(response);
         console.log(me.arrayListado);
       })["catch"](function (error) {});
     },
-    addProveedor: function addProveedor(value) {
-      var _this = this;
-
+    addProveedor: function addProveedor(id) {
+      console.log("para guardar", id);
       var me = this;
-      var url = 'store-proveedor';
-      var data = {
-        nombre: value[0],
-        rfc: value[1],
-        email: value[2],
-        estatus: value[3]
-      };
+      var url = 'store-proveedor'; // let data = {
+      //     nombre : value[0],
+      //     rfc    : value[1],
+      //     email  : value[2],
+      //     estatus : value[3]
+      // }
+
       sweetalert2__WEBPACK_IMPORTED_MODULE_0___default.a.fire({
         icon: 'warning',
         title: 'Se dará acceso a este proveedor. Continuar?',
@@ -2038,19 +2046,19 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (result) {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
-          axios.post(url, data).then(function (response) {
+          axios.post(url, {
+            idProv: id
+          }).then(function (response) {
             me.getListado();
-
-            _this.$toastr.Add({
+            me.$toastr.Add({
               name: "aceptProv",
-              title: "Proveedor acepetado",
-              msg: "El proveedor " + value[0] + " fué aceptado",
+              title: "Proveedor aceptado",
+              msg: "El proveedor fué aceptado",
               position: "toast-top-right",
               type: "success",
               timeout: 5000,
               progressbar: true
             });
-
             sweetalert2__WEBPACK_IMPORTED_MODULE_0___default.a.fire({
               type: 'success',
               title: 'Guardado',
@@ -2086,7 +2094,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     deleteProveedor: function deleteProveedor(value) {
-      var _this2 = this;
+      var _this = this;
 
       var me = this;
       var url = 'delete-proveedor';
@@ -2109,7 +2117,7 @@ __webpack_require__.r(__webpack_exports__);
           axios.post(url, data).then(function (response) {
             me.getListado();
 
-            _this2.$toastr.Add({
+            _this.$toastr.Add({
               name: "aceptProv",
               title: "Proveedor rechazado",
               msg: "El proveedor " + value[0] + " fué rechazado",
@@ -2157,8 +2165,48 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     previewFiles: function previewFiles() {
-      this.files = this.$refs.myFiles.files;
-      console.log(this.files);
+      var me = this;
+      me.files = this.$refs.myFiles.files[0];
+      var formData = new FormData();
+      var url = 'cargarFile';
+      formData.append('file', me.files);
+      console.log("serializar form", formData);
+      sweetalert2__WEBPACK_IMPORTED_MODULE_0___default.a.fire({
+        icon: 'warning',
+        title: 'Los datos se guardaran automaticamente. Continuar?',
+        showDenyButton: true,
+        // showCancelButton: true,
+        confirmButtonText: 'Continuar',
+        denyButtonText: 'Cancelar'
+      }).then(function (result) {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          axios.post(url, formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }).then(function (response) {
+            me.files = '';
+            me.getListado();
+          })["catch"](function (error) {
+            console.log(error);
+          });
+        } else if (result.isDenied) {
+          me.files = '';
+          sweetalert2__WEBPACK_IMPORTED_MODULE_0___default.a.fire({
+            type: 'info',
+            title: 'Cancelado',
+            showClass: {
+              popup: 'animate__animated animate__fadeInDown'
+            },
+            hideClass: {
+              popup: 'animate__animated animate__fadeOutUp'
+            }
+          });
+        }
+      }); // this.files = this.$refs.myFiles.files
+      // console.log(this.files);
+      // this.getListado(this.files[0])
     }
   }
 });
@@ -42347,103 +42395,117 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("div", { staticClass: "mb-3" }, [
-      _c("label", { staticClass: "form-label" }, [_vm._v("Archivo csv")]),
-      _vm._v(" "),
-      _c("input", {
-        ref: "myFiles",
-        staticClass: "form-control",
-        attrs: { type: "file", id: "file", accept: "csv" },
-        on: { change: _vm.previewFiles },
-      }),
+  return _c("div", { staticClass: "row" }, [
+    _c("div", { staticClass: "col-md-12" }, [
+      _c("div", { staticClass: "mb-3" }, [
+        _c("label", { staticClass: "form-label", attrs: { for: "formFile" } }, [
+          _vm._v("Archivo csv"),
+        ]),
+        _vm._v(" "),
+        _c("input", {
+          ref: "myFiles",
+          staticClass: "form-control",
+          attrs: { type: "file", id: "file", accept: ".csv" },
+          on: { change: _vm.previewFiles },
+        }),
+      ]),
     ]),
     _vm._v(" "),
-    _c("div", { staticClass: "table-responsive" }, [
-      _c("table", { staticClass: "table table-hover text-center" }, [
-        _vm._m(0),
-        _vm._v(" "),
-        _c(
-          "tbody",
-          [
-            !_vm.arrayListado.length
-              ? _c("tr", [
-                  _c("td", { attrs: { colspan: "5" } }, [
-                    _vm._v("No hay proveedores que mostrar"),
+    _c("div", { staticClass: "col-md-12" }, [
+      _c("div", { staticClass: "table-responsive" }, [
+        _c("table", { staticClass: "table table-hover text-center" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c(
+            "tbody",
+            [
+              !_vm.arrayListado.length
+                ? _c("tr", [
+                    _c("td", { attrs: { colspan: "6" } }, [
+                      _vm._v("No hay proveedores que mostrar"),
+                    ]),
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm._l(_vm.arrayListado, function (proveedor) {
+                return _c("tr", { key: proveedor.id }, [
+                  _c("td", {
+                    domProps: { textContent: _vm._s(proveedor.consecutivo) },
+                  }),
+                  _vm._v(" "),
+                  _c("td", {
+                    domProps: { textContent: _vm._s(proveedor.nombre) },
+                  }),
+                  _vm._v(" "),
+                  _c("td", {
+                    domProps: { textContent: _vm._s(proveedor.rfc) },
+                  }),
+                  _vm._v(" "),
+                  _c("td", {
+                    domProps: { textContent: _vm._s(proveedor.email) },
+                  }),
+                  _vm._v(" "),
+                  proveedor.estatus == 1
+                    ? _c("td", [_c("span", [_vm._v("Sin registro")])])
+                    : proveedor.estatus == 2
+                    ? _c("td", [
+                        _c("span", { staticClass: "alert alert-success" }, [
+                          _vm._v("Registrado"),
+                        ]),
+                      ])
+                    : _c("td", [
+                        _c("span", { staticClass: "alert alert-danger" }, [
+                          _vm._v("Rechazado"),
+                        ]),
+                      ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-outline-dark p-1",
+                        attrs: {
+                          disabled: proveedor.estatus != 1,
+                          type: "button",
+                          "data-toggle": "tooltip",
+                          "data-placement": "top",
+                          title: "Registrar",
+                        },
+                        on: {
+                          click: function ($event) {
+                            return _vm.addProveedor(proveedor.id)
+                          },
+                        },
+                      },
+                      [_c("i", { staticClass: "fas fa-edit fa-lg pt-1" })]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-outline-danger p-1",
+                        attrs: {
+                          disabled: proveedor.estatus != 1,
+                          type: "button",
+                          "data-toggle": "tooltip",
+                          "data-placement": "top",
+                          title: "Eliminar",
+                        },
+                        on: {
+                          click: function ($event) {
+                            return _vm.deleteProveedor(proveedor.id)
+                          },
+                        },
+                      },
+                      [_c("i", { staticClass: "fas fa-trash-alt fa-lg pt-1" })]
+                    ),
                   ]),
                 ])
-              : _vm._e(),
-            _vm._v(" "),
-            _vm._l(_vm.arrayListado, function (proveedor) {
-              return _c("tr", { key: proveedor[1] }, [
-                _c("td", { domProps: { textContent: _vm._s(proveedor[4]) } }),
-                _vm._v(" "),
-                _c("td", { domProps: { textContent: _vm._s(proveedor[0]) } }),
-                _vm._v(" "),
-                _c("td", { domProps: { textContent: _vm._s(proveedor[1]) } }),
-                _vm._v(" "),
-                _c("td", { domProps: { textContent: _vm._s(proveedor[2]) } }),
-                _vm._v(" "),
-                proveedor[3] == 1
-                  ? _c("td", [_c("span", [_vm._v("Sin registro")])])
-                  : proveedor[3] == 2
-                  ? _c("td", [
-                      _c("span", { staticClass: "alert alert-success" }, [
-                        _vm._v("Registrado"),
-                      ]),
-                    ])
-                  : _c("td", [
-                      _c("span", { staticClass: "alert alert-danger" }, [
-                        _vm._v("Rechazado"),
-                      ]),
-                    ]),
-                _vm._v(" "),
-                _c("td", [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-outline-dark p-1",
-                      attrs: {
-                        disabled: proveedor[3] != 1,
-                        type: "button",
-                        "data-toggle": "tooltip",
-                        "data-placement": "top",
-                        title: "Registrar",
-                      },
-                      on: {
-                        click: function ($event) {
-                          return _vm.addProveedor(proveedor)
-                        },
-                      },
-                    },
-                    [_c("i", { staticClass: "fas fa-edit fa-lg pt-1" })]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-outline-danger p-1",
-                      attrs: {
-                        disabled: proveedor[3] != 1,
-                        type: "button",
-                        "data-toggle": "tooltip",
-                        "data-placement": "top",
-                        title: "Eliminar",
-                      },
-                      on: {
-                        click: function ($event) {
-                          return _vm.deleteProveedor(proveedor)
-                        },
-                      },
-                    },
-                    [_c("i", { staticClass: "fas fa-trash-alt fa-lg pt-1" })]
-                  ),
-                ]),
-              ])
-            }),
-          ],
-          2
-        ),
+              }),
+            ],
+            2
+          ),
+        ]),
       ]),
     ]),
   ])

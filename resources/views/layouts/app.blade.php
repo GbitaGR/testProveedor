@@ -9,7 +9,8 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-   
+
+    <link href="{{ asset('css/bootstrap5.min.css') }}" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
@@ -76,6 +77,10 @@
     </div>
 </body>
  <!-- Scripts -->
+ {{-- <script src="{{ asset('js/toastr.min.js') }}" ></script> --}}
+ <script src="{{ asset('js/jquery-3.2.1.slim.min.js') }}" ></script>
+ <script src="{{ asset('js/popper.min.js') }}" ></script>
+ <script src="{{ asset('js/bootstrap.min.js') }}" ></script>
  <script src="{{asset('js/app.js')}}"></script>
  <script src="{{asset('js/fontawesome.js')}}"></script>
 </html>

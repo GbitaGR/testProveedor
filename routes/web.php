@@ -24,7 +24,9 @@ Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
 //Routes Adm7inistrador
 Route::get('index-admin', 'AdministradorController@index')->name('index.admin')->middleware('auth');
-Route::get('getListado', 'AdministradorController@cargarListado')->name('listado.proveedores');
+// Route::get('getListado/{file}', 'AdministradorController@cargarListado')->name('listado.proveedores');
+Route::post('cargarFile', 'AdministradorController@cargarListado')->name('listado.proveedores');
+Route::get('getListado', 'AdministradorController@getListado')->name('listado.proveedores.get');
 
 
 //Route sin rol
