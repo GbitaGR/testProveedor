@@ -155,17 +155,22 @@ class AdministradorController extends Controller
     }
 
     public function delete(Request $request){
+        // dd($request->all());
         try {
             DB::beginTransaction();
-            $data = $request->all();
+            // $data = $request->all();
 
             //Creando proveedor
-            $proveedor = new Proveedor();
-            $proveedor->nombre  =   $data['nombre'];
-            $proveedor->rfc     =   $data['rfc'];
-            $proveedor->email   =   $data['email'];
-            $proveedor->estatus =   3; //Registrado
-            $proveedor->save();
+            $proveedor = Proveedor::findOrFail($request->idProv);
+            if($proveedor){
+                $proveedor->estatus = 3; //Rechazado
+                $proveedor->save();
+            }
+            // $proveedor->nombre  =   $data['nombre'];
+            // $proveedor->rfc     =   $data['rfc'];
+            // $proveedor->email   =   $data['email'];
+            // $proveedor->estatus =   3; //Registrado
+            // $proveedor->save();
 
             
             DB::commit();

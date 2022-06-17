@@ -154,15 +154,16 @@
                     })
 
             },
-            deleteProveedor(value){
+            deleteProveedor(id){
+                console.log("Que hace?",id);
                 let me=this
                 let url = 'delete-proveedor'   
-                let data = {
-                    nombre : value[0],
-                    rfc    : value[1],
-                    email  : value[2],
-                    estatus : value[3]
-                }
+                // let data = {
+                //     nombre : value[0],
+                //     rfc    : value[1],
+                //     email  : value[2],
+                //     estatus : value[3]
+                // }
                  Swal.fire({
                     icon: 'warning',
                     title: 'Se rechazará el acceso al proveedor. Continuar?',
@@ -173,12 +174,12 @@
                     }).then((result) => {
                     /* Read more about isConfirmed, isDenied below */
                     if (result.isConfirmed) {
-                        axios.post(url,data).then(response=>{
+                        axios.post(url,{idProv:id}).then(response=>{
                             me.getListado()
                             this.$toastr.Add({
                                     name: "aceptProv",
                                     title: "Proveedor rechazado",
-                                    msg: "El proveedor "+value[0]+ " fué rechazado",
+                                    msg: "El proveedor fué rechazado",
                                     position: "toast-top-right",
                                     type: "info",
                                     timeout: 5000,

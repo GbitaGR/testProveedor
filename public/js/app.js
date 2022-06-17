@@ -2093,17 +2093,18 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
-    deleteProveedor: function deleteProveedor(value) {
+    deleteProveedor: function deleteProveedor(id) {
       var _this = this;
 
+      console.log("Que hace?", id);
       var me = this;
-      var url = 'delete-proveedor';
-      var data = {
-        nombre: value[0],
-        rfc: value[1],
-        email: value[2],
-        estatus: value[3]
-      };
+      var url = 'delete-proveedor'; // let data = {
+      //     nombre : value[0],
+      //     rfc    : value[1],
+      //     email  : value[2],
+      //     estatus : value[3]
+      // }
+
       sweetalert2__WEBPACK_IMPORTED_MODULE_0___default.a.fire({
         icon: 'warning',
         title: 'Se rechazará el acceso al proveedor. Continuar?',
@@ -2114,13 +2115,15 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (result) {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
-          axios.post(url, data).then(function (response) {
+          axios.post(url, {
+            idProv: id
+          }).then(function (response) {
             me.getListado();
 
             _this.$toastr.Add({
               name: "aceptProv",
               title: "Proveedor rechazado",
-              msg: "El proveedor " + value[0] + " fué rechazado",
+              msg: "El proveedor fué rechazado",
               position: "toast-top-right",
               type: "info",
               timeout: 5000,
